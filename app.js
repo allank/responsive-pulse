@@ -10,6 +10,7 @@ var extend = require( 'util' )._extend,
     nodemailer = require( 'nodemailer' ),
     htmlToText = require( 'nodemailer-html-to-text' ).htmlToText,
     sesTransport = require( 'nodemailer-ses-transport' ),
+    MongoDBStore = require('connect-mongodb-session')(session),
     MongoStore = require( 'express-session-mongo' ),
     csrf = require( 'csurf' ),
     config = require( './config' ),
@@ -35,9 +36,10 @@ app.locals.moment = require('moment');
 
 app.use( session( {
     secret: config.session.secret,
-    saveUninitialized: true,
-    resave: true,
-    store: new MongoStore( { ip: config.db.ip, port: config.db.port, db: config.db.database } )
+    saveUninitialized: false,
+    resave: false,
+    store: new MongoDBStore( { uri: 'mongodb://localhost:27017/connect_mongodb_session_test', collection: 'mySessions' } )
+    // store: new MongoStore( { ip: config.db.ip, port: config.db.port, db: config.db.database } )
 } ) );
 app.use( flash() );
 
@@ -84,7 +86,7 @@ app.use( function( req, res, next ) {
 app.use( function( err, req, res, next ) {
     if( err.code !== 'EBADCSRFTOKEN' ) return next( err );
 
-    // handle CSRF token errors here
+    // handle CSRF toke n errors here
     res.status( 403 );
     var errorValue = 'Session has expired or the form has been tampered with.';
 

@@ -7,7 +7,7 @@ var local = require('./config/local');
 exports.appName = 'ucros';
 
 exports.env = {
-    production: false,
+    production: true,
     staging: false,
     test: false,
     development: false

@@ -3,7 +3,10 @@ var HomeController = function() {
         if( req.isAuthenticated() )
             return res.redirect( '/dashboard' );
 
-        res.render( 'landing' );
+        res.render( 'landing', {}, function(err, html) {
+          console.log("landing page");
+          res.send(html);
+        } );
     };
 };
 
